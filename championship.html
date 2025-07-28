@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Championship Standings - Kart Championship 2025</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: #ff1e3d;
+      transform: translateY(-2px);
+    }
+
+    .nav-links a.active {
+      color: #ff1e3d;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding-top: 100px;
+      min-height: 100vh;
+    }
+
+    .championship-header {
+      text-align: center;
+      padding: 60px 20px;
+      background: 
+        radial-gradient(circle at 30% 70%, rgba(255, 30, 61, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+    }
+
+    .championship-title {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .championship-subtitle {
+      font-size: 1.2rem;
+      color: #cccccc;
+      margin-bottom: 40px;
+    }
+
+    .season-info {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .info-item {
+      text-align: center;
+    }
+
+    .info-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #ff1e3d;
+    }
+
+    .info-label {
+      font-size: 0.9rem;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Championship Table */
+    .championship-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    .table-container {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .table-header {
+      background: linear-gradient(135deg, #ff1e3d, #ff6b35);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .table-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+    }
+
+    .standings-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .standings-table th {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px 15px;
+      text-align: left;
+      font-weight: 600;
+      color: #ffffff;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .standings-table th:first-child {
+      text-align: center;
+      width: 60px;
+    }
+
+    .standings-table th:last-child {
+      text-align: center;
+      width: 100px;
+    }
+
+    .standings-table td {
+      padding: 20px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .standings-table tr:hover {
+      background: rgba(255, 30, 61, 0.1);
+      transform: scale(1.01);
+    }
+
+    .position-cell {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .position-1 { color: #ffd700; }
+    .position-2 { color: #c0c0c0; }
+    .position-3 { color: #cd7f32; }
+
+    .driver-cell {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #ffffff;
+      position: relative;
+    }
+
+    .driver-cell::before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 30px;
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35);
+      border-radius: 2px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .standings-table tr:hover .driver-cell::before {
+      opacity: 1;
+    }
+
+    .points-cell {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #ff1e3d;
+    }
+
+    .race-points {
+      text-align: center;
+      color: #cccccc;
+      font-weight: 500;
+    }
+
+    /* Points Legend */
+    .points-legend {
+      margin-top: 40px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .legend-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #ff1e3d;
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .legend-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .legend-position {
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .legend-points {
+      font-weight: bold;
+      color: #ff1e3d;
+    }
+
+    /* Loading Animation */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid #ff1e3d;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .championship-title {
+        font-size: 2.5rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .season-info {
+        gap: 20px;
+      }
+      
+      .standings-table th,
+      .standings-table td {
+        padding: 15px 10px;
+        font-size: 0.9rem;
+      }
+      
+      .legend-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">KART CHAMPIONSHIP</div>
+      <ul class="nav-links">
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="championship.html" class="active">Championship</a></li>
+        <li><a href="circuits.html">Circuits</a></li>
+        <li><a href="#results">Results</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Championship Header -->
+    <div class="championship-header">
+      <h1 class="championship-title">CHAMPIONSHIP STANDINGS</h1>
+      <p class="championship-subtitle">2025 Season • Driver Championship</p>
+      <div class="season-info">
+        <div class="info-item">
+          <div class="info-number">1</div>
+          <div class="info-label">Races Completed</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">13</div>
+          <div class="info-label">Drivers</div>
+        </div>
+        <div class="info-item">
+          <div class="info-number">25</div>
+          <div class="info-label">Points Available</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Championship Table -->
+    <div class="championship-container">
+      <div class="table-container">
+        <div class="table-header">
+          <h2 class="table-title">Driver Standings</h2>
+        </div>
+        
+        <div id="loading" class="loading">
+          <div class="loading-spinner"></div>
+        </div>
+        
+        <table class="standings-table" id="standings-table" style="display: none;">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Driver</th>
+              <th>Race 01</th>
+              <th>Total Points</th>
+            </tr>
+          </thead>
+          <tbody id="standings-tbody">
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Points Legend -->
+      <div class="points-legend">
+        <h3 class="legend-title">Points System</h3>
+        <div class="legend-grid">
+          <div class="legend-item">
+            <span class="legend-position">1st Place</span>
+            <span class="legend-points">25 pts</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-position">2nd Place</span>
+            <span class="legend-points">18 pts</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-position">3rd Place</span>
+            <span class="legend-points">15 pts</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-position">4th Place</span>
+            <span class="legend-points">12 pts</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-position">5th Place</span>
+            <span class="legend-points">10 pts</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-position">6th Place</span>
+            <span class="legend-points">8 pts</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-position">7th Place</span>
+            <span class="legend-points">6 pts</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-position">8th Place</span>
+            <span class="legend-points">4 pts</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-position">9th Place</span>
+            <span class="legend-points">2 pts</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-position">10th Place</span>
+            <span class="legend-points">1 pt</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Load championship data from CSV file
+    async function loadChampionshipData() {
+      try {
+        const response = await fetch('data/Championship_2025.csv');
+        const csvText = await response.text();
+        return csvText;
+      } catch (error) {
+        console.error('Error loading championship data:', error);
+        return null;
+      }
+    }
+
+    async function parseChampionshipData() {
+      const csvData = await loadChampionshipData();
+      if (!csvData) {
+        return [];
+      }
+
+      const parsed = Papa.parse(csvData, {
+        header: true,
+        skipEmptyLines: true,
+        delimiter: ';'
+      });
+
+      // Clean and sort the data
+      const data = parsed.data.map(row => ({
+        driver: row.Driver.trim(),
+        total: parseInt(row.Total.trim()),
+        race01: parseInt(row['Race 01'].trim())
+      })).sort((a, b) => b.total - a.total);
+
+      return data;
+    }
+
+    function getPositionClass(position) {
+      if (position === 1) return 'position-1';
+      if (position === 2) return 'position-2';
+      if (position === 3) return 'position-3';
+      return '';
+    }
+
+    async function renderStandings() {
+      const data = await parseChampionshipData();
+      const tbody = document.getElementById('standings-tbody');
+      const loadingElement = document.getElementById('loading');
+      const table = document.getElementById('standings-table');
+
+      // Simulate loading delay
+      setTimeout(() => {
+        loadingElement.style.display = 'none';
+        table.style.display = 'table';
+
+        if (data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #ff1e3d;">Error loading championship data</td></tr>';
+          return;
+        }
+
+        data.forEach((driver, index) => {
+          const position = index + 1;
+          const row = document.createElement('tr');
+          
+          row.innerHTML = `
+            <td class="position-cell ${getPositionClass(position)}">${position}</td>
+            <td class="driver-cell">${driver.driver}</td>
+            <td class="race-points">${driver.race01}</td>
+            <td class="points-cell">${driver.total}</td>
+          `;
+
+          tbody.appendChild(row);
+        });
+
+        // Animate rows
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach((row, index) => {
+          row.style.opacity = '0';
+          row.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            row.style.transition = 'all 0.5s ease';
+            row.style.opacity = '1';
+            row.style.transform = 'translateY(0)';
+          }, index * 100);
+        });
+      }, 1000);
+    }
+
+    // Navigation scroll effect
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 100) {
+        navbar.style.background = 'rgba(0, 0, 0, 0.98)';
+      } else {
+        navbar.style.background = 'rgba(0, 0, 0, 0.95)';
+      }
+    });
+
+    // Animate info numbers on load
+    function animateNumbers() {
+      const numbers = document.querySelectorAll('.info-number');
+      numbers.forEach(numberEl => {
+        const finalNumber = parseInt(numberEl.textContent);
+        let currentNumber = 0;
+        const increment = finalNumber / 30;
+        
+        const timer = setInterval(() => {
+          currentNumber += increment;
+          if (currentNumber >= finalNumber) {
+            numberEl.textContent = finalNumber;
+            clearInterval(timer);
+          } else {
+            numberEl.textContent = Math.floor(currentNumber);
+          }
+        }, 50);
+      });
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      renderStandings();
+      setTimeout(animateNumbers, 500);
+    });
+  </script>
+</body>
+</html>

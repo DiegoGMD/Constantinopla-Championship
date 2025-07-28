@@ -1,146 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dynamic Kart Championship</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kart Championship 2025</title>
+  <meta http-equiv="refresh" content="0; url=homepage.html">
+  <link rel="canonical" href="homepage.html">
   <style>
-    body { font-family: sans-serif; background: #121212; color: #fff; padding: 20px; }
-    .nav { display: flex; gap: 10px; margin-bottom: 20px; }
-    .nav button { padding: 10px; cursor: pointer; }
-    .circuit-section { display: none; }
-    .circuit-section.active { display: block; }
-    .session-tabs { display: flex; gap: 10px; margin: 10px 0; }
-    .session-tabs button { padding: 5px; cursor: pointer; }
-    .session-content { display: none; }
-    .session-content.active { display: block; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    th, td { border: 1px solid #555; padding: 8px; text-align: left; }
-    .fastest-time { color: #f0c; font-weight: bold; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      color: #ffffff;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .redirect-container {
+      max-width: 600px;
+      padding: 40px;
+    }
+
+    .logo {
+      font-size: 3rem;
+      font-weight: bold;
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+    }
+
+    .redirect-message {
+      font-size: 1.2rem;
+      color: #cccccc;
+      margin-bottom: 30px;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid #ff1e3d;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    .manual-link {
+      color: #ff1e3d;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .manual-link:hover {
+      color: #ff6b35;
+      text-decoration: underline;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
-  <h1>Kart Championship</h1>
-  <div class="nav" id="circuit-nav"></div>
-  <div id="circuits-container"></div>
+  <div class="redirect-container">
+    <div class="logo">KART CHAMPIONSHIP</div>
+    <div class="loading-spinner"></div>
+    <p class="redirect-message">Redirecting to homepage...</p>
+    <p>If you are not redirected automatically, <a href="homepage.html" class="manual-link">click here</a>.</p>
+  </div>
 
   <script>
-    const circuitData = {};
-
-    async function listFiles() {
-      const files = [
-        'benikarts_qualifying.csv',
-        'benikarts_race.csv',
-        'benikarts_race2.csv'
-      ]; // Replace with actual directory listing from backend or statically define
-      return files;
-    }
-
-    function groupByCircuit(files) {
-      const grouped = {};
-      files.forEach(file => {
-        const match = file.match(/(.*?)_(qualifying|race2?|practice)\.csv/);
-        if (match) {
-          const [, circuit, session] = match;
-          if (!grouped[circuit]) grouped[circuit] = {};
-          grouped[circuit][session] = file;
-        }
-      });
-      return grouped;
-    }
-
-    async function loadCSV(file) {
-      const res = await fetch(`data/${file}`);
-      const text = await res.text();
-      return Papa.parse(text, { header: true, skipEmptyLines: true, delimiter: ';' }).data;
-    }
-
-    function createTable(data, session) {
-      const table = document.createElement('table');
-      const thead = document.createElement('thead');
-      const headers = Object.keys(data[0] || {});
-      thead.innerHTML = '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
-      table.appendChild(thead);
-
-      const tbody = document.createElement('tbody');
-      let fastest = session.includes('qualifying') || session.includes('race') ? getFastestLap(data) : null;
-
-      data.forEach(row => {
-        const tr = document.createElement('tr');
-        headers.forEach(h => {
-          const val = row[h];
-          const isFastest = fastest && h.toLowerCase().includes('best') && val === fastest;
-          tr.innerHTML += `<td class="${isFastest ? 'fastest-time' : ''}">${val}</td>`;
-        });
-        tbody.appendChild(tr);
-      });
-      table.appendChild(tbody);
-      return table;
-    }
-
-    function getFastestLap(data) {
-      return data.reduce((fastest, row) => {
-        const val = row['Best Lap'];
-        if (!val) return fastest;
-        return (!fastest || val < fastest) ? val : fastest;
-      }, null);
-    }
-
-    async function render() {
-      const files = await listFiles();
-      const grouped = groupByCircuit(files);
-      const nav = document.getElementById('circuit-nav');
-      const container = document.getElementById('circuits-container');
-
-      Object.entries(grouped).forEach(([circuit, sessions], index) => {
-        // Circuit button
-        const btn = document.createElement('button');
-        btn.textContent = circuit;
-        btn.onclick = () => {
-          document.querySelectorAll('.circuit-section').forEach(d => d.classList.remove('active'));
-          document.getElementById(`section-${circuit}`).classList.add('active');
-        };
-        nav.appendChild(btn);
-
-        // Circuit section
-        const section = document.createElement('div');
-        section.id = `section-${circuit}`;
-        section.className = 'circuit-section' + (index === 0 ? ' active' : '');
-
-        const tabDiv = document.createElement('div');
-        tabDiv.className = 'session-tabs';
-
-        const contentDiv = document.createElement('div');
-
-        Object.entries(sessions).forEach(([session, file], sIndex) => {
-          const tabBtn = document.createElement('button');
-          tabBtn.textContent = session.toUpperCase();
-          tabBtn.onclick = () => {
-            contentDiv.querySelectorAll('.session-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(`${circuit}-${session}`).classList.add('active');
-          };
-          tabDiv.appendChild(tabBtn);
-
-          const sessionDiv = document.createElement('div');
-          sessionDiv.id = `${circuit}-${session}`;
-          sessionDiv.className = 'session-content' + (sIndex === 0 ? ' active' : '');
-
-          loadCSV(file).then(data => {
-            const table = createTable(data, session);
-            sessionDiv.appendChild(table);
-          });
-
-          contentDiv.appendChild(sessionDiv);
-        });
-
-        section.appendChild(tabDiv);
-        section.appendChild(contentDiv);
-        container.appendChild(section);
-      });
-    }
-
-    render();
+    // JavaScript redirect as backup
+    setTimeout(() => {
+      window.location.href = 'homepage.html';
+    }, 1000);
   </script>
 </body>
 </html>

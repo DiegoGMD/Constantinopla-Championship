@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circuits & Results - Kart Championship 2025</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: #ff1e3d;
+      transform: translateY(-2px);
+    }
+
+    .nav-links a.active {
+      color: #ff1e3d;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding-top: 100px;
+      min-height: 100vh;
+    }
+
+    .circuits-header {
+      text-align: center;
+      padding: 60px 20px;
+      background: 
+        radial-gradient(circle at 30% 70%, rgba(255, 30, 61, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+    }
+
+    .circuits-title {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .circuits-subtitle {
+      font-size: 1.2rem;
+      color: #cccccc;
+      margin-bottom: 40px;
+    }
+
+    /* Circuit Navigation */
+    .circuit-nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+    }
+
+    .circuit-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .circuit-btn {
+      padding: 15px 30px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      color: #ffffff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+    }
+
+    .circuit-btn:hover,
+    .circuit-btn.active {
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35);
+      border-color: transparent;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255, 30, 61, 0.3);
+    }
+
+    /* Circuit Section */
+    .circuit-section {
+      display: none;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    .circuit-section.active {
+      display: block;
+    }
+
+    .circuit-info {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .circuit-name {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #ff1e3d;
+      margin-bottom: 10px;
+    }
+
+    .circuit-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .detail-item {
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .detail-label {
+      font-size: 0.9rem;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .detail-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    /* Session Tabs */
+    .session-tabs {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .session-tab {
+      padding: 12px 25px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 25px;
+      color: #ffffff;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    .session-tab:hover,
+    .session-tab.active {
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35);
+      border-color: transparent;
+      transform: translateY(-2px);
+    }
+
+    /* Session Content */
+    .session-content {
+      display: none;
+    }
+
+    .session-content.active {
+      display: block;
+    }
+
+    .results-table-container {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .table-header {
+      background: linear-gradient(135deg, #ff1e3d, #ff6b35);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .session-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .results-table th {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 18px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #ffffff;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .results-table th:first-child {
+      text-align: center;
+      width: 60px;
+    }
+
+    .results-table td {
+      padding: 18px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .results-table tr:hover {
+      background: rgba(255, 30, 61, 0.1);
+      transform: scale(1.005);
+    }
+
+    .position-cell {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .position-1 { color: #ffd700; }
+    .position-2 { color: #c0c0c0; }
+    .position-3 { color: #cd7f32; }
+
+    .driver-name {
+      font-weight: 600;
+      color: #ffffff;
+      font-size: 1rem;
+    }
+
+    .fastest-time {
+      color: #ff1e3d;
+      font-weight: bold;
+    }
+
+    .time-cell {
+      font-family: 'Courier New', monospace;
+      font-weight: 500;
+      color: #cccccc;
+    }
+
+    .gap-cell {
+      font-family: 'Courier New', monospace;
+      color: #999;
+    }
+
+    .points-cell {
+      text-align: center;
+      font-weight: bold;
+      color: #ff1e3d;
+    }
+
+    /* Loading Animation */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid #ff1e3d;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .circuits-title {
+        font-size: 2.5rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .circuit-buttons {
+        gap: 10px;
+      }
+      
+      .circuit-btn {
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+      
+      .results-table th,
+      .results-table td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+      }
+      
+      .circuit-details {
+        grid-template-columns: 1fr;
+      }
+      
+      .session-tabs {
+        gap: 10px;
+      }
+      
+      .session-tab {
+        padding: 10px 15px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">KART CHAMPIONSHIP</div>
+      <ul class="nav-links">
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="championship.html">Championship</a></li>
+        <li><a href="circuits.html" class="active">Circuits</a></li>
+        <li><a href="#results">Results</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Circuits Header -->
+    <div class="circuits-header">
+      <h1 class="circuits-title">CIRCUITS & RESULTS</h1>
+      <p class="circuits-subtitle">2025 Season • Race Results & Session Data</p>
+    </div>
+
+    <!-- Circuit Navigation -->
+    <div class="circuit-nav">
+      <div class="circuit-buttons">
+        <button class="circuit-btn active" onclick="showCircuit('benikarts')">BeniKarts</button>
+      </div>
+    </div>
+
+    <!-- BeniKarts Circuit -->
+    <div class="circuit-section active" id="circuit-benikarts">
+      <div class="circuit-info">
+        <h2 class="circuit-name">BeniKarts Circuit</h2>
+        <div class="circuit-details">
+          <div class="detail-item">
+            <div class="detail-label">Lap Record</div>
+            <div class="detail-value">47.105</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Race Distance</div>
+            <div class="detail-value">16 Laps</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Drivers</div>
+            <div class="detail-value">13</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Sessions</div>
+            <div class="detail-value">2</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Tabs -->
+      <div class="session-tabs">
+        <button class="session-tab active" onclick="showSession('benikarts', 'qualifying')">Qualifying</button>
+        <button class="session-tab" onclick="showSession('benikarts', 'race')">Race</button>
+      </div>
+
+      <!-- Qualifying Results -->
+      <div class="session-content active" id="benikarts-qualifying">
+        <div class="results-table-container">
+          <div class="table-header">
+            <h3 class="session-title">Qualifying Results</h3>
+          </div>
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Pos</th>
+                <th>Driver</th>
+                <th>Laps</th>
+                <th>Best Lap</th>
+                <th>Fast Lap</th>
+                <th>Gap</th>
+              </tr>
+            </thead>
+            <tbody id="qualifying-tbody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Race Results -->
+      <div class="session-content" id="benikarts-race">
+        <div class="results-table-container">
+          <div class="table-header">
+            <h3 class="session-title">Race Results</h3>
+          </div>
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Pos</th>
+                <th>Driver</th>
+                <th>Laps</th>
+                <th>Best Lap</th>
+                <th>Fast Lap</th>
+                <th>Gap</th>
+                <th>Points</th>
+              </tr>
+            </thead>
+            <tbody id="race-tbody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Load CSV data from files
+    async function loadCSVFile(filename) {
+      try {
+        const response = await fetch(`data/${filename}`);
+        const csvText = await response.text();
+        return csvText;
+      } catch (error) {
+        console.error(`Error loading ${filename}:`, error);
+        return null;
+      }
+    }
+
+    function parseCSVData(csvData) {
+      const parsed = Papa.parse(csvData, {
+        header: true,
+        skipEmptyLines: true,
+        delimiter: ';'
+      });
+
+      return parsed.data.map(row => {
+        const cleanRow = {};
+        Object.keys(row).forEach(key => {
+          cleanRow[key.trim()] = row[key].trim();
+        });
+        return cleanRow;
+      });
+    }
+
+    function getPositionClass(position) {
+      const pos = parseInt(position);
+      if (pos === 1) return 'position-1';
+      if (pos === 2) return 'position-2';
+      if (pos === 3) return 'position-3';
+      return '';
+    }
+
+    function findFastestLap(data, lapColumn) {
+      let fastest = null;
+      let fastestTime = null;
+
+      data.forEach(row => {
+        const time = row[lapColumn];
+        if (time && time !== '-' && time.includes(':')) {
+          if (!fastestTime || time < fastestTime) {
+            fastestTime = time;
+            fastest = time;
+          }
+        }
+      });
+
+      return fastest;
+    }
+
+    async function renderQualifying() {
+      const csvData = await loadCSVFile('2025_01_BeniKarts_Quali.csv');
+      if (!csvData) {
+        document.getElementById('qualifying-tbody').innerHTML = '<tr><td colspan="6" style="text-align: center; color: #ff1e3d;">Error loading qualifying data</td></tr>';
+        return;
+      }
+
+      const data = parseCSVData(csvData);
+      const tbody = document.getElementById('qualifying-tbody');
+      const fastestLap = findFastestLap(data, 'Best Lap');
+
+      data.forEach((row, index) => {
+        const tr = document.createElement('tr');
+        const position = parseInt(row.Position);
+        const isFastestLap = row['Best Lap'] === fastestLap;
+
+        tr.innerHTML = `
+          <td class="position-cell ${getPositionClass(position)}">${position}</td>
+          <td class="driver-name">${row.Driver}</td>
+          <td class="text-center">${row.Laps}</td>
+          <td class="time-cell ${isFastestLap ? 'fastest-time' : ''}">${row['Best Lap']}</td>
+          <td class="text-center">${row['Fast Lap']}</td>
+          <td class="gap-cell">${row.Gap}</td>
+        `;
+
+        tbody.appendChild(tr);
+
+        // Animate row
+        setTimeout(() => {
+          tr.style.opacity = '0';
+          tr.style.transform = 'translateY(20px)';
+          tr.style.transition = 'all 0.5s ease';
+          setTimeout(() => {
+            tr.style.opacity = '1';
+            tr.style.transform = 'translateY(0)';
+          }, 50);
+        }, index * 100);
+      });
+    }
+
+    async function renderRace() {
+      const csvData = await loadCSVFile('2025_01_BeniKarts_Race.csv');
+      if (!csvData) {
+        document.getElementById('race-tbody').innerHTML = '<tr><td colspan="7" style="text-align: center; color: #ff1e3d;">Error loading race data</td></tr>';
+        return;
+      }
+
+      const data = parseCSVData(csvData);
+      const tbody = document.getElementById('race-tbody');
+      const fastestLap = findFastestLap(data, 'Best Lap');
+
+      data.forEach((row, index) => {
+        const tr = document.createElement('tr');
+        const position = parseInt(row.Position);
+        const isFastestLap = row['Best Lap'] === fastestLap;
+
+        tr.innerHTML = `
+          <td class="position-cell ${getPositionClass(position)}">${position}</td>
+          <td class="driver-name">${row.Driver}</td>
+          <td class="text-center">${row.Laps}</td>
+          <td class="time-cell ${isFastestLap ? 'fastest-time' : ''}">${row['Best Lap']}</td>
+          <td class="text-center">${row['Fast Lap']}</td>
+          <td class="gap-cell">${row.Gap}</td>
+          <td class="points-cell">${row.Points || '0'}</td>
+        `;
+
+        tbody.appendChild(tr);
+
+        // Animate row
+        setTimeout(() => {
+          tr.style.opacity = '0';
+          tr.style.transform = 'translateY(20px)';
+          tr.style.transition = 'all 0.5s ease';
+          setTimeout(() => {
+            tr.style.opacity = '1';
+            tr.style.transform = 'translateY(0)';
+          }, 50);
+        }, index * 100);
+      });
+    }
+
+    function showCircuit(circuitId) {
+      // Update circuit buttons
+      document.querySelectorAll('.circuit-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Show circuit section
+      document.querySelectorAll('.circuit-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(`circuit-${circuitId}`).classList.add('active');
+    }
+
+    function showSession(circuitId, sessionId) {
+      // Update session tabs
+      document.querySelectorAll('.session-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Show session content
+      document.querySelectorAll('.session-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById(`${circuitId}-${sessionId}`).classList.add('active');
+    }
+
+    // Navigation scroll effect
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 100) {
+        navbar.style.background = 'rgba(0, 0, 0, 0.98)';
+      } else {
+        navbar.style.background = 'rgba(0, 0, 0, 0.95)';
+      }
+    });
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      renderQualifying();
+      renderRace();
+    });
+  </script>
+</body>
+</html>

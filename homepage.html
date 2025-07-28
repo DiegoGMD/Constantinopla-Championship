@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kart Championship 2025</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: #ff1e3d;
+      transform: translateY(-2px);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: 
+        radial-gradient(circle at 30% 70%, rgba(255, 30, 61, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    }
+
+    .hero-content {
+      text-align: center;
+      max-width: 800px;
+      padding: 0 20px;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .hero-title {
+      font-size: 4rem;
+      font-weight: 900;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: 1.4rem;
+      color: #cccccc;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-button {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .cta-primary {
+      background: linear-gradient(45deg, #ff1e3d, #ff6b35);
+      color: white;
+      box-shadow: 0 10px 30px rgba(255, 30, 61, 0.3);
+    }
+
+    .cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(255, 30, 61, 0.4);
+    }
+
+    .cta-secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .cta-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.6);
+      transform: translateY(-3px);
+    }
+
+    /* Stats Section */
+    .stats-section {
+      padding: 100px 0;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .stats-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 40px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 30, 61, 0.3);
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #ff1e3d;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      color: #cccccc;
+      font-weight: 500;
+    }
+
+    /* Latest Results Section */
+    .results-section {
+      padding: 100px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 60px;
+      color: #ffffff;
+    }
+
+    .results-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .result-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .result-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #ff1e3d;
+    }
+
+    .result-date {
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    .podium {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .podium-position {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .position-number {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .position-1 { background: linear-gradient(45deg, #ffd700, #ffed4e); color: #000; }
+    .position-2 { background: linear-gradient(45deg, #c0c0c0, #e8e8e8); color: #000; }
+    .position-3 { background: linear-gradient(45deg, #cd7f32, #daa520); color: #fff; }
+
+    .driver-name {
+      font-weight: 500;
+      color: #ffffff;
+    }
+
+    /* Floating Elements */
+    .floating-element {
+      position: absolute;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .floating-element:nth-child(1) {
+      top: 20%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .floating-element:nth-child(2) {
+      top: 60%;
+      right: 10%;
+      animation-delay: 2s;
+    }
+
+    .floating-element:nth-child(3) {
+      bottom: 20%;
+      left: 20%;
+      animation-delay: 4s;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">KART CHAMPIONSHIP</div>
+      <ul class="nav-links">
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="championship.html">Championship</a></li>
+        <li><a href="circuits.html">Circuits</a></li>
+        <li><a href="#results">Results</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="floating-element">🏎️</div>
+    <div class="floating-element">🏁</div>
+    <div class="floating-element">🏆</div>
+    
+    <div class="hero-content">
+      <h1 class="hero-title">KART CHAMPIONSHIP 2025</h1>
+      <p class="hero-subtitle">Experience the thrill of professional kart racing with cutting-edge technology and world-class competition</p>
+      <div class="cta-buttons">
+        <a href="championship.html" class="cta-button cta-primary">View Championship</a>
+        <a href="circuits.html" class="cta-button cta-secondary">Explore Circuits</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">13</div>
+          <div class="stat-label">Drivers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1</div>
+          <div class="stat-label">Circuits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">2025</div>
+          <div class="stat-label">Season</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">16</div>
+          <div class="stat-label">Race Laps</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Results -->
+  <section class="results-section">
+    <h2 class="section-title">Latest Results</h2>
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-title">BeniKarts - Qualifying</div>
+          <div class="result-date">Jan 2025</div>
+        </div>
+        <div class="podium">
+          <div class="podium-position">
+            <div class="position-number position-1">1</div>
+            <div class="driver-name">Oscaristo</div>
+            <div style="margin-left: auto; color: #ff1e3d; font-weight: bold;">47.213</div>
+          </div>
+          <div class="podium-position">
+            <div class="position-number position-2">2</div>
+            <div class="driver-name">o1ve</div>
+            <div style="margin-left: auto; color: #ccc;">47.429</div>
+          </div>
+          <div class="podium-position">
+            <div class="position-number position-3">3</div>
+            <div class="driver-name">Crosshairs4G63</div>
+            <div style="margin-left: auto; color: #ccc;">47.492</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-title">BeniKarts - Race</div>
+          <div class="result-date">Jan 2025</div>
+        </div>
+        <div class="podium">
+          <div class="podium-position">
+            <div class="position-number position-1">1</div>
+            <div class="driver-name">Oscaristo</div>
+            <div style="margin-left: auto; color: #ff1e3d; font-weight: bold;">Winner</div>
+          </div>
+          <div class="podium-position">
+            <div class="position-number position-2">2</div>
+            <div class="driver-name">Crosshairs4G63</div>
+            <div style="margin-left: auto; color: #ccc;">+0.684</div>
+          </div>
+          <div class="podium-position">
+            <div class="position-number position-3">3</div>
+            <div class="driver-name">o11ve</div>
+            <div style="margin-left: auto; color: #ccc;">+9.784</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-title">Championship Standings</div>
+          <div class="result-date">Current</div>
+        </div>
+        <div class="podium">
+          <div class="podium-position">
+            <div class="position-number position-1">1</div>
+            <div class="driver-name">Oscaristo</div>
+            <div style="margin-left: auto; color: #ff1e3d; font-weight: bold;">10 pts</div>
+          </div>
+          <div class="podium-position">
+            <div class="position-number position-2">2</div>
+            <div class="driver-name">Crosshairs4G63</div>
+            <div style="margin-left: auto; color: #ccc;">8 pts</div>
+          </div>
+          <div class="podium-position">
+            <div class="position-number position-3">3</div>
+            <div class="driver-name">o11ve</div>
+            <div style="margin-left: auto; color: #ccc;">6 pts</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add scroll effect to navbar
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 100) {
+        navbar.style.background = 'rgba(0, 0, 0, 0.98)';
+      } else {
+        navbar.style.background = 'rgba(0, 0, 0, 0.95)';
+      }
+    });
+
+    // Animate stats on scroll
+    const observerOptions = {
+      threshold: 0.5,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const statNumber = entry.target.querySelector('.stat-number');
+          const finalNumber = parseInt(statNumber.textContent);
+          let currentNumber = 0;
+          const increment = finalNumber / 50;
+          
+          const timer = setInterval(() => {
+            currentNumber += increment;
+            if (currentNumber >= finalNumber) {
+              statNumber.textContent = finalNumber;
+              clearInterval(timer);
+            } else {
+              statNumber.textContent = Math.floor(currentNumber);
+            }
+          }, 30);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.stat-card').forEach(card => {
+      observer.observe(card);
+    });
+  </script>
+</body>
+</html>
