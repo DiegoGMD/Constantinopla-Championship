@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Circuits & Results - Kart Championship 2025</title>
+  <title>Circuitos y Resultados - Campeonato de Karts de Constantinopla 2025</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
     * {
@@ -408,12 +408,12 @@
   <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-container">
-      <div class="logo">KART CHAMPIONSHIP</div>
+      <div class="logo">CONSTANTINOPLA KARTS</div>
       <ul class="nav-links">
-        <li><a href="homepage.html">Home</a></li>
-        <li><a href="championship.html">Championship</a></li>
-        <li><a href="circuits.html" class="active">Circuits</a></li>
-        <li><a href="#results">Results</a></li>
+        <li><a href="homepage.html">Inicio</a></li>
+        <li><a href="championship.html">Campeonato</a></li>
+        <li><a href="circuits.html" class="active">Circuitos</a></li>
+        <li><a href="#results">Resultados</a></li>
       </ul>
     </div>
   </nav>
@@ -422,8 +422,8 @@
   <main class="main-content">
     <!-- Circuits Header -->
     <div class="circuits-header">
-      <h1 class="circuits-title">CIRCUITS & RESULTS</h1>
-      <p class="circuits-subtitle">2025 Season • Race Results & Session Data</p>
+      <h1 class="circuits-title">CIRCUITOS Y RESULTADOS</h1>
+      <p class="circuits-subtitle">Temporada 2025 • Resultados de Carreras y Datos de Sesiones</p>
     </div>
 
     <!-- Circuit Navigation -->
@@ -436,22 +436,22 @@
     <!-- BeniKarts Circuit -->
     <div class="circuit-section active" id="circuit-benikarts">
       <div class="circuit-info">
-        <h2 class="circuit-name">BeniKarts Circuit</h2>
+        <h2 class="circuit-name">Circuito BeniKarts</h2>
         <div class="circuit-details">
           <div class="detail-item">
-            <div class="detail-label">Lap Record</div>
+            <div class="detail-label">Récord de Vuelta</div>
             <div class="detail-value">47.105</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">Race Distance</div>
-            <div class="detail-value">16 Laps</div>
+            <div class="detail-label">Distancia Carrera</div>
+            <div class="detail-value">16 Vueltas</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">Drivers</div>
+            <div class="detail-label">Pilotos</div>
             <div class="detail-value">13</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">Sessions</div>
+            <div class="detail-label">Sesiones</div>
             <div class="detail-value">2</div>
           </div>
         </div>
@@ -459,25 +459,25 @@
 
       <!-- Session Tabs -->
       <div class="session-tabs">
-        <button class="session-tab active" onclick="showSession('benikarts', 'qualifying')">Qualifying</button>
-        <button class="session-tab" onclick="showSession('benikarts', 'race')">Race</button>
+        <button class="session-tab active" onclick="showSession('benikarts', 'qualifying')">Clasificación</button>
+        <button class="session-tab" onclick="showSession('benikarts', 'race')">Carrera</button>
       </div>
 
       <!-- Qualifying Results -->
       <div class="session-content active" id="benikarts-qualifying">
         <div class="results-table-container">
           <div class="table-header">
-            <h3 class="session-title">Qualifying Results</h3>
+            <h3 class="session-title">Resultados de Clasificación</h3>
           </div>
           <table class="results-table">
             <thead>
               <tr>
                 <th>Pos</th>
-                <th>Driver</th>
-                <th>Laps</th>
-                <th>Best Lap</th>
-                <th>Fast Lap</th>
-                <th>Gap</th>
+                <th>Piloto</th>
+                <th>Vueltas</th>
+                <th>Mejor Vuelta</th>
+                <th>Vuelta Rápida</th>
+                <th>Diferencia</th>
               </tr>
             </thead>
             <tbody id="qualifying-tbody">
@@ -490,18 +490,18 @@
       <div class="session-content" id="benikarts-race">
         <div class="results-table-container">
           <div class="table-header">
-            <h3 class="session-title">Race Results</h3>
+            <h3 class="session-title">Resultados de la Carrera</h3>
           </div>
           <table class="results-table">
             <thead>
               <tr>
                 <th>Pos</th>
-                <th>Driver</th>
-                <th>Laps</th>
-                <th>Best Lap</th>
-                <th>Fast Lap</th>
-                <th>Gap</th>
-                <th>Points</th>
+                <th>Piloto</th>
+                <th>Vueltas</th>
+                <th>Mejor Vuelta</th>
+                <th>Vuelta Rápida</th>
+                <th>Diferencia</th>
+                <th>Puntos</th>
               </tr>
             </thead>
             <tbody id="race-tbody">
@@ -513,17 +513,35 @@
   </main>
 
   <script>
-    // Load CSV data from files
-    async function loadCSVFile(filename) {
-      try {
-        const response = await fetch(`data/${filename}`);
-        const csvText = await response.text();
-        return csvText;
-      } catch (error) {
-        console.error(`Error loading ${filename}:`, error);
-        return null;
-      }
-    }
+    // Embedded CSV data for GitHub Pages compatibility
+    const qualifyingCSV = `Position; Driver        ; Laps; Best Lap ; Fast Lap; Gap
+       1; Oscaristo     ;    9; 00:47.213;        9; 0.000
+       2; o1ve          ;    8; 00:47.429;        8; 0.216
+       3; Crosshairs4G63;    9; 00:47.492;        9; 0.279
+       4; Ceri          ;    9; 00:47.573;        6; 0.360
+       5; JeZzZuZ       ;    9; 00:48.068;        3; 0.855
+       6; Createc       ;    9; 00:48.988;        7; 1.775
+       7; Adri          ;    9; 00:49.032;        6; 1.819
+       8; Gillet        ;    9; 00:49.420;        9; 2.207
+       9; Joan          ;    8; 00:49.736;        7; 2.523
+      10; M. Motos      ;    8; 00:51.736;        7; 4.523
+      11; BOSCH         ;    3; 00:51.925;        1; 4.712
+      12; Diego         ;    7; 00:52.168;        6; 4.955
+      13; Bellido       ;    7; 00:53.655;        3; 6.442`;
+
+    const raceCSV = `Position; Driver        ; Laps; Best Lap ; Fast Lap; Gap   ; Points
+       1; Oscaristo     ;   16; 00:47.204;       13; 00.000;     10
+       2; Crosshairs4G63;   16; 00:47.105;        9; 00.684;      8
+       3; o11ve         ;   16; 00:47.492;       10; 09.784;      6
+       4; Ceri          ;   16; 00:47.366;       11; 11.776;      5
+       5; JeZzZuZ       ;   16; 00:47.510;       14; 15.182;      4
+       6; Gillet        ;   16; 00:48.591;       11; 23.698;      3
+       7; Createc       ;   16; 00:48.600;        9; 27.651;      2
+       8; Adri          ;   16; 00:49.051;        5; 33.409;      1
+       9; Joan          ;   16; 00:48.979;       13; 37.195;      0
+      10; M. Motos      ;   15; 00:49.618;        7; 1 Laps;      0
+      11; Diego         ;   15; 00:49.159;       14; 1 Laps;      0
+      12; Bellido       ;   14; 00:53.736;       14; 2 Laps;      0`;
 
     function parseCSVData(csvData) {
       const parsed = Papa.parse(csvData, {
@@ -566,14 +584,8 @@
       return fastest;
     }
 
-    async function renderQualifying() {
-      const csvData = await loadCSVFile('2025_01_BeniKarts_Quali.csv');
-      if (!csvData) {
-        document.getElementById('qualifying-tbody').innerHTML = '<tr><td colspan="6" style="text-align: center; color: #ff1e3d;">Error loading qualifying data</td></tr>';
-        return;
-      }
-
-      const data = parseCSVData(csvData);
+    function renderQualifying() {
+      const data = parseCSVData(qualifyingCSV);
       const tbody = document.getElementById('qualifying-tbody');
       const fastestLap = findFastestLap(data, 'Best Lap');
 
@@ -606,14 +618,8 @@
       });
     }
 
-    async function renderRace() {
-      const csvData = await loadCSVFile('2025_01_BeniKarts_Race.csv');
-      if (!csvData) {
-        document.getElementById('race-tbody').innerHTML = '<tr><td colspan="7" style="text-align: center; color: #ff1e3d;">Error loading race data</td></tr>';
-        return;
-      }
-
-      const data = parseCSVData(csvData);
+    function renderRace() {
+      const data = parseCSVData(raceCSV);
       const tbody = document.getElementById('race-tbody');
       const fastestLap = findFastestLap(data, 'Best Lap');
 
